@@ -1,20 +1,209 @@
 package com.enabling.neeladri.ui.dashboard
 
+import androidx.annotation.Keep
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.enabling.neeladri.components.LoadImage
-import com.enabling.neeladri.components.PrimaryText
-import com.enabling.neeladri.components.SecondaryText
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.enabling.neeladri.network.model.Dashboard
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.enabling.neeladri.R
+import com.enabling.neeladri.components.fontDimensionResource
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 
+
+
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun CategorySection(dataBlock: Dashboard.Item) {
+    when (!dataBlock.data.isNullOrEmpty()) {
+        true -> {
+            CategoryWidget(dataBlock.data)
+        }
+        false -> {
+            BlankWidget()
+        }
+    }
+}
+
+
+
+
+@Keep
+@ExperimentalPagerApi
+@Composable
+fun CategoryWidget(first: List<Dashboard.Item.SubItem>) {
+    Box(
+        modifier = Modifier
+            .wrapContentWidth()
+            .wrapContentHeight()
+            .background(colorResource(R.color.colorPrimaryDark)),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen._10sdp)))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(dimensionResource(id = R.dimen._10sdp))
+
+            ) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .wrapContentWidth()
+                        .wrapContentHeight(),
+                    text = "title name",
+                    color = colorResource(R.color.colorPrimaryDark),
+                    fontSize = fontDimensionResource(id = R.dimen._12ssp),
+                    maxLines = 2,
+                )
+            }
+            Spacer(
+                modifier = Modifier
+                    .height(dimensionResource(id = R.dimen._5sdp))
+            )
+            FlowRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                mainAxisAlignment = FlowMainAxisAlignment.Start
+            ) {
+                if (first != null) {
+                    first.forEachIndexed { index, element ->
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .wrapContentWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CategoryItem(element, index)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Keep
+@Composable
+fun CategoryItem(element: Dashboard.Item.SubItem, index: Int) {
+    val screenWidth = LocalConfiguration.current.screenWidthDp / 3
+    Box(
+        modifier = Modifier
+            .background(color = colorResource(R.color.colorPrimaryDark))
+            .width(screenWidth.dp)
+            .height(dimensionResource(id = R.dimen._140sdp))
+            .padding(dimensionResource(id = R.dimen._3sdp))
+    ) {
+        Column(
+            Modifier
+                .wrapContentSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Card(
+                modifier = Modifier
+                    .width(dimensionResource(id = R.dimen._90sdp))
+                    .height(dimensionResource(id = R.dimen._90sdp))
+                    .clickable(
+                        onClick = {
+
+                        },
+                    ), shape = RoundedCornerShape(dimensionResource(id = R.dimen._8sdp)),
+                elevation = dimensionResource(id = R.dimen._8sdp)
+            ) {
+                Box {
+                    val painter = if (element?.imageUrl == null) {
+                        painterResource(R.drawable.ic_logo)
+                    } else {
+                        rememberAsyncImagePainter(
+                            ImageRequest.Builder(LocalContext.current)
+                                .data(data = element.imageUrl)
+                                .allowHardware(false)
+                                .build()
+                        )
+                    }
+                    Image(
+                        painter = painterResource(R.drawable.ic_logo),
+                        contentDescription = "content",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(),
+                        contentScale = ContentScale.FillBounds
+                    )
+                    Image(
+                        painter = painter,
+                        contentDescription = "content",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(),
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .height(dimensionResource(id = R.dimen._50sdp))
+                    .fillMaxWidth()
+                    .padding(vertical = dimensionResource(id = R.dimen._4sdp)),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Text(
+                    text = element?.title ?: "",
+                    color = colorResource(R.color.colorPrimaryDark),
+                    fontSize = fontDimensionResource(id = R.dimen._11ssp),
+                    textAlign = TextAlign.Center,
+                    maxLines = 2, overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 @Composable
 fun ShowCategoryElement(item: Dashboard.Item.SubItem) {
     Column {
@@ -70,3 +259,5 @@ private fun CategoryInfo(title: String?, subTitle: String?) {
 fun getColor(colorString: String): Color {
     return Color(android.graphics.Color.parseColor(colorString))
 }
+
+ */

@@ -1,19 +1,32 @@
 package com.enabling.neeladri.ui.main
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 
@@ -29,7 +42,9 @@ import com.enabling.neeladri.ui.JetDeliveryTheme
 import com.enabling.neeladri.ui.dashboard.ShowDashboard
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat.startActivity
 import com.enabling.neeladri.R
+import java.net.URLEncoder
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,9 +62,10 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 fun JetDeliveryApp(viewModel: MainViewModel) {
     var showRandom by remember { mutableStateOf(false) }
-
+    val context= LocalContext.current
     viewModel.loadData(showRandom)
 
     JetDeliveryTheme {
@@ -58,25 +74,33 @@ fun JetDeliveryApp(viewModel: MainViewModel) {
                 AppTopBar(
                     name = stringResource(id = R.string.app_name),
                     showRandom = showRandom,
-//                    onShowRandomDashboardChange = {
-//                        showRandom = it
-//                    }
-
                 )
+            },
 
+            floatingActionButton = {
+                FloatingActionButton(
+                    backgroundColor = colorResource(id = R.color.colorPrimary),
+                    contentColor = Color.White,
+                    onClick = {
+                        openWHatsApp(context)
 
+                    }) {
+                    Icon(Icons.Filled.Call,"")
+                }
             }
                     // displays Test Admob with blue background
+        )
 
+        {
 
-        ) {
+            val data = viewModel.dashboardItems.observeAsState().value
             when (val data = viewModel.dashboardItems.observeAsState().value) {
                 is Result.Loading -> {
                     ShowLoading()
                 }
                 is Result.Success -> {
                     ShowDashboard(
-                        data = data.data ?: emptyList()
+                         data.data ?: emptyList()
                     )
                 }
                 is Result.Failure -> {
@@ -92,6 +116,30 @@ fun JetDeliveryApp(viewModel: MainViewModel) {
                 }
             }
         }
+    }
+}
+
+fun openWHatsApp(ctx:Context) {
+
+    try {
+        ctx  .packageManager?.getPackageInfo(
+            "com.whatsapp",
+            PackageManager.GET_ACTIVITIES
+        )
+        val textMsg =
+           "HI " +
+                    URLEncoder.encode(
+                        "Do you want help?" +
+                       "utf-8"
+                    )
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(textMsg)
+        )
+        intent.setPackage("com.whatsapp")
+        ctx?.startActivity(intent)
+    } catch (e: PackageManager.NameNotFoundException) {
+        Log.e("whatsapp", e.toString())
     }
 }
 

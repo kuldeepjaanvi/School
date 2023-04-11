@@ -1,47 +1,107 @@
 package com.enabling.neeladri.ui.dashboard
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import com.enabling.neeladri.components.ShowVerticalDivider
+import androidx.compose.ui.res.colorResource
 import com.enabling.neeladri.network.model.Dashboard
 import com.enabling.neeladri.network.model.ItemViewType
-import com.enabling.neeladri.network.model.SubItemViewType
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
 import com.enabling.neeladri.R
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ShowDashboard(data: List<Dashboard.Item>) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = dimensionResource(id = R.dimen.padding))
-    ) {
-        itemsIndexed(items = data) { index, item ->
-            when (item.viewType) {
-                ItemViewType.HorizontalScroll -> ShowHorizontalElements(
-                    item = item
-                )
-                ItemViewType.VerticalScroll -> ShowVerticalElements(
-                    item = item
-                )
+fun ShowDashboard(list: List<Dashboard.Item>) {
+    LazyColumn {
+        item {
+            Column(
+                Modifier
+                    .animateItemPlacement()
+                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .background(
+                        color = colorResource(R.color.colorPrimaryDark),
+                    )
+            ) {
+                list.forEachIndexed { index, dataBlock ->
+                    when (list[index].viewType) {
+                        ItemViewType.HorizontalScroll-> {
+                            key(index) {
+                                BannerSection(dataBlock)
+                            }
+                        }
+
+                        ItemViewType.HorizontalScroll-> {
+                            key(index) {
+                                CategorySection(dataBlock)
+                            }
+                        }
+                        ItemViewType.VerticalScroll-> {
+                            key(index) {
+                                CategorySection(dataBlock)
+                            }
+                        }
+                        else -> {
+                            BlankWidget()
+                        }
+                    }
+                }
             }
-            if (index != item.data.size) Spacer(modifier = Modifier.height(10.dp))
+
         }
     }
 }
 
+
+
+@Composable
+fun BlankWidget(modifier: Modifier = Modifier) {
+    Box(modifier = Modifier.then(modifier)) {}
+}
+
+
+//    LazyColumn(
+//        modifier = Modifier.fillMaxSize(),
+//        contentPadding = PaddingValues(vertical = dimensionResource(id = R.dimen.padding))
+//    ) {
+//        itemsIndexed(items = data) { index, item ->
+//            when (item.viewType) {
+//                ItemViewType.HorizontalScroll -> ShowHorizontalElements(
+//                    item = item
+//                )
+//                ItemViewType.VerticalScroll -> ShowVerticalElements(
+//                    item = item
+//                )
+//
+//            }
+//            if (index != item.data.size) Spacer(modifier = Modifier.height(10.dp))
+//        }
+//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 @Composable
 private fun ShowHorizontalElements(item: Dashboard.Item) {
     item.header?.let {
@@ -113,3 +173,4 @@ fun AdvertView(modifier: Modifier = Modifier) {
         )
     }
 }
+*/
