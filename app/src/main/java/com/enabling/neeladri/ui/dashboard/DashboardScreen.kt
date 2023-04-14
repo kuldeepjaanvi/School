@@ -9,7 +9,6 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import com.enabling.neeladri.network.model.Dashboard
-import com.enabling.neeladri.network.model.ItemViewType
 import com.enabling.neeladri.R
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
