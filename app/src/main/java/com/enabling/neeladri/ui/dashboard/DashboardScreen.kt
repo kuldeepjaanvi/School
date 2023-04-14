@@ -27,18 +27,17 @@ fun ShowDashboard(list: List<Dashboard.Item>) {
             ) {
                 list.forEachIndexed { index, dataBlock ->
                     when (list[index].viewType) {
-                        ItemViewType.HorizontalScroll-> {
+                       "bannerHorizontal"-> {
                             key(index) {
                                 BannerSection(dataBlock)
                             }
                         }
-
-                        ItemViewType.HorizontalScroll-> {
+                        "categoryHorizontal"-> {
                             key(index) {
                                 CategorySection(dataBlock)
                             }
                         }
-                        ItemViewType.VerticalScroll-> {
+                       "categoryVertical"-> {
                             key(index) {
                                 CategorySection(dataBlock)
                             }

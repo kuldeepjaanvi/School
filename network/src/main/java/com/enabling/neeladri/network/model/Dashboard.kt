@@ -6,7 +6,7 @@ data class Dashboard(
     val data: List<Item>
 ) {
     data class Item(
-        val viewType: ItemViewType,
+        val viewType: String?,
         val header: Header?,
         val data: List<SubItem>
     ) {
@@ -38,10 +38,10 @@ data class DashboardAction(
     val value: String
 )
 
-enum class ItemViewType {
-    @Json(name = "horizontalScroll") HorizontalScroll,
-    @Json(name = "verticalScroll") VerticalScroll
-}
+//enum class ItemViewType {
+//    @Json(name = "horizontalScroll") HorizontalScroll,
+//    @Json(name = "verticalScroll") VerticalScroll
+//}
 
 enum class SubItemViewType {
     @Json(name = "bannerElement") Banner,
