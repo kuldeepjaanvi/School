@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.colorResource
@@ -50,14 +52,20 @@ import com.enabling.neeladri.ui.dashboard.WebviewScreen
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
-
+private  lateinit var composeView: androidx.compose.ui.platform.ComposeView
+private  lateinit var call: ImageButton
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-
-        setContent {
+        composeView=findViewById(R.id.homeView)
+        call=findViewById(R.id.call)
+        composeView. setContent {
             JetDeliveryApp(viewModel)
+        }
+        call.setOnClickListener {
+            call(this,)
         }
     }
 }
@@ -71,15 +79,15 @@ fun JetDeliveryApp(viewModel: MainViewModel) {
 
     JetDeliveryTheme {
         Scaffold(
-                    topBar = {
-                AppTopBar(
-                    name = stringResource(id = R.string.app_name),
-                    showRandom = showRandom,
-                    callClick = {
-                        call(context)
-                    }
-                )
-            },
+//                    topBar = {
+//                AppTopBar(
+//                    name = stringResource(id = R.string.app_name),
+//                    showRandom = showRandom,
+//                    callClick = {
+//                        call(context)
+//                    }
+//                )
+//            },
 
             floatingActionButton = {
                 FloatingActionButton(
@@ -129,8 +137,8 @@ fun JetDeliveryApp(viewModel: MainViewModel) {
 
 fun openWebView(data: String,ctx:Context) {
     if(data?.isNotEmpty()){
-  val intent = Intent(ctx, WebviewScreen::class.java)
-    intent.putExtra("url", data)
+    val intent = Intent(ctx, WebviewScreen::class.java)
+    intent.putExtra("url", data.toString())
     ctx.startActivity(intent)
 }
 }

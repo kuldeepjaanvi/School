@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -34,6 +35,7 @@ fun BannerSection(dataBlock: Dashboard.Item,onItemClick: (String) -> Unit) {
         }
     }
 }
+
 
 
 @Composable
@@ -123,6 +125,8 @@ fun BannerCarousel(first: List<Dashboard.Item.SubItem>,onItemClick: (String) -> 
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxWidth()
+                .background(color = colorResource(R.color.colorPrimaryDark))
+
                 .clickable(
                     onClick = {
 onItemClick(first[pagerState.currentPage].action.value?:"")
@@ -150,14 +154,14 @@ onItemClick(first[pagerState.currentPage].action.value?:"")
                                 .build()
                         )
                     }
-                Image(
-                    painter = painterResource(R.drawable.ic_logo),
-                    contentDescription = "content",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(dimensionResource(id = R.dimen._110sdp)),
-                    alignment = Alignment.Center,
-                )
+//                Image(
+//                    painter = painterResource(R.drawable.ic_logo),
+//                    contentDescription = "content",
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(dimensionResource(id = R.dimen._110sdp)),
+//                    alignment = Alignment.Center,
+//                )
                 Image(
                     painter = painter,
                     contentDescription ="",
@@ -165,6 +169,7 @@ onItemClick(first[pagerState.currentPage].action.value?:"")
                         .fillMaxWidth()
                         .wrapContentHeight(),
                     alignment = Alignment.Center,
+                    contentScale = ContentScale.FillWidth,
                 )
 
             }

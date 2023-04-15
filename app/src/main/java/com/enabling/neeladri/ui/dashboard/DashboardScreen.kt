@@ -31,6 +31,11 @@ fun ShowDashboard(list: List<Dashboard.Item>,onItemClick: (String) -> Unit) {
                                 BannerSection(dataBlock,onItemClick)
                             }
                         }
+                        "singleBanner"-> {
+                            key(index) {
+                                SingleBannerView(dataBlock,onItemClick)
+                            }
+                        }
                         "categoryHorizontal"-> {
                             key(index) {
                                 CategorySection(dataBlock,onItemClick)

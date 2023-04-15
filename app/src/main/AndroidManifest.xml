@@ -21,7 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.dashboard.WebviewScreen"/>
+        <activity
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name=".ui.dashboard.WebviewScreen"/>
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-6486384294117820~4910320055" />

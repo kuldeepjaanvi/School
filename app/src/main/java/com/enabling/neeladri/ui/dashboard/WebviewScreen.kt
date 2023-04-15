@@ -8,6 +8,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ImageButton
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
@@ -16,13 +17,18 @@ import com.enabling.neeladri.R
 
 class WebviewScreen : AppCompatActivity() {
     private lateinit var webView: WebView
+    private lateinit var back: ImageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_webview)
         val extras = intent.extras
         val webUrl = extras!!.getString("url")!!
         webView =findViewById(R.id.staticPagesWebView)!!
+        back =findViewById(R.id.back)!!
         startWebView(webUrl)
+        back.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")

@@ -5,12 +5,15 @@ import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,14 +27,16 @@ fun AppTopBar(
 ) {
     TopAppBar(
         title = { Text(text = name) },
-        backgroundColor = Color.Cyan,
+        backgroundColor = colorResource(id = R.color.colorPrimary),
         actions = {
            //openPhoneDialer("9886787008")
             Icon(
                 painter = painterResource(id = R.drawable.baseline_call_24),
-                modifier = Modifier.clickable {
-                    callClick()
-                },
+                modifier = Modifier
+                    .padding(horizontal = dimensionResource(id = R.dimen._20sdp))
+                    .clickable {
+                        callClick()
+                    },
                 contentDescription = "call")
         }
     )
