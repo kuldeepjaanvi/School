@@ -6,7 +6,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
@@ -29,22 +31,20 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
 import com.enabling.neeladri.components.AppTopBar
 import com.enabling.neeladri.components.ShowError
 import com.enabling.neeladri.components.ShowLoading
 import com.enabling.neeladri.data.Result
 import com.enabling.neeladri.ui.JetDeliveryTheme
 import com.enabling.neeladri.ui.dashboard.ShowDashboard
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat.startActivity
-import com.enabling.neeladri.R
-import java.net.URLEncoder
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import  com.enabling.neeladri.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -74,6 +74,9 @@ fun JetDeliveryApp(viewModel: MainViewModel) {
                 AppTopBar(
                     name = stringResource(id = R.string.app_name),
                     showRandom = showRandom,
+                    callClick = {
+                        call(context)
+                    }
                 )
             },
 
@@ -120,26 +123,34 @@ fun JetDeliveryApp(viewModel: MainViewModel) {
 }
 
 fun openWHatsApp(ctx:Context) {
+        val contact = "+91 8871722186" // use country code with your phone number
 
+        val url = "https://api.whatsapp.com/send?phone=$contact"
+        try {
+            val pm: PackageManager = ctx.getPackageManager()
+            pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES)
+            val i = Intent(Intent.ACTION_VIEW)
+            i.data = Uri.parse(url)
+           ctx. startActivity(i)
+        } catch (e: PackageManager.NameNotFoundException) {
+            Toast.makeText(
+               ctx,
+                "Whatsapp app not installed in your phone",
+                Toast.LENGTH_SHORT
+            ).show()
+            e.printStackTrace()
+        }
+
+}
+
+fun call(ctx:Context) {
+    val u = Uri.parse("tel:" + "8871722186")
+    val i = Intent(Intent.ACTION_DIAL, u)
     try {
-        ctx  .packageManager?.getPackageInfo(
-            "com.whatsapp",
-            PackageManager.GET_ACTIVITIES
-        )
-        val textMsg =
-           "HI " +
-                    URLEncoder.encode(
-                        "Do you want help?" +
-                       "utf-8"
-                    )
-        val intent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse(textMsg)
-        )
-        intent.setPackage("com.whatsapp")
-        ctx?.startActivity(intent)
-    } catch (e: PackageManager.NameNotFoundException) {
-        Log.e("whatsapp", e.toString())
+        ctx.startActivity(i)
+    } catch (s: SecurityException) {
+        Toast.makeText(ctx, "An error occurred", Toast.LENGTH_LONG)
+            .show()
     }
 }
 

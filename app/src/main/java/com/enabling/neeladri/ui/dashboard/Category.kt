@@ -18,6 +18,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,7 +39,7 @@ import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 fun CategorySection(dataBlock: Dashboard.Item) {
     when (!dataBlock.data.isNullOrEmpty()) {
         true -> {
-            CategoryWidget(dataBlock.data)
+            CategoryWidget(dataBlock.data,dataBlock.header)
         }
         false -> {
             BlankWidget()
@@ -52,7 +53,7 @@ fun CategorySection(dataBlock: Dashboard.Item) {
 @Keep
 @ExperimentalPagerApi
 @Composable
-fun CategoryWidget(first: List<Dashboard.Item.SubItem>) {
+fun CategoryWidget(first: List<Dashboard.Item.SubItem>,header: Dashboard.Item.Header?) {
     Box(
         modifier = Modifier
             .wrapContentWidth()
@@ -79,9 +80,10 @@ fun CategoryWidget(first: List<Dashboard.Item.SubItem>) {
                         .align(Alignment.Center)
                         .wrapContentWidth()
                         .wrapContentHeight(),
-                    text = "title name",
-                    color = colorResource(R.color.colorPrimaryDark),
-                    fontSize = fontDimensionResource(id = R.dimen._12ssp),
+                    text = "${header?.title}",
+                    color = colorResource(R.color.colorPrimary),
+                    fontSize = fontDimensionResource(id = R.dimen._14ssp),
+                    fontStyle = FontStyle.Normal,
                     maxLines = 2,
                 )
             }

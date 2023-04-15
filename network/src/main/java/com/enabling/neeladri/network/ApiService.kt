@@ -9,7 +9,8 @@ import retrofit2.http.GET
 
 interface ApiService {
 
-    @GET("school.json")
+  //  @GET("school.json")
+    @GET("masterdata.json")
     suspend fun getDashboard(): Dashboard
 
     @GET("data-random.json")
