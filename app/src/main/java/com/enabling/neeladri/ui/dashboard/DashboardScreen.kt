@@ -12,7 +12,7 @@ import com.enabling.neeladri.network.model.Dashboard
 import com.enabling.neeladri.R
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ShowDashboard(list: List<Dashboard.Item>) {
+fun ShowDashboard(list: List<Dashboard.Item>,onItemClick: (String) -> Unit) {
     LazyColumn {
         item {
             Column(
@@ -28,17 +28,17 @@ fun ShowDashboard(list: List<Dashboard.Item>) {
                     when (list[index].viewType) {
                        "bannerHorizontal"-> {
                             key(index) {
-                                BannerSection(dataBlock)
+                                BannerSection(dataBlock,onItemClick)
                             }
                         }
                         "categoryHorizontal"-> {
                             key(index) {
-                                CategorySection(dataBlock)
+                                CategorySection(dataBlock,onItemClick)
                             }
                         }
                        "categoryVertical"-> {
                             key(index) {
-                                CategorySection(dataBlock)
+                                CategorySection(dataBlock,onItemClick)
                             }
                         }
                         else -> {

@@ -45,6 +45,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import  com.enabling.neeladri.R
+import com.enabling.neeladri.ui.dashboard.WebviewScreen
 
 class MainActivity : AppCompatActivity() {
 
@@ -103,7 +104,11 @@ fun JetDeliveryApp(viewModel: MainViewModel) {
                 }
                 is Result.Success -> {
                     ShowDashboard(
-                         data.data ?: emptyList()
+                         data.data ?: emptyList(),
+                        onItemClick = {
+                            data->
+                           openWebView(data,context)
+                        }
                     )
                 }
                 is Result.Failure -> {
@@ -120,6 +125,14 @@ fun JetDeliveryApp(viewModel: MainViewModel) {
             }
         }
     }
+}
+
+fun openWebView(data: String,ctx:Context) {
+    if(data?.isNotEmpty()){
+  val intent = Intent(ctx, WebviewScreen::class.java)
+    intent.putExtra("url", data)
+    ctx.startActivity(intent)
+}
 }
 
 fun openWHatsApp(ctx:Context) {

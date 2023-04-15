@@ -36,10 +36,10 @@ import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun CategorySection(dataBlock: Dashboard.Item) {
+fun CategorySection(dataBlock: Dashboard.Item,onItemClick: (String) -> Unit) {
     when (!dataBlock.data.isNullOrEmpty()) {
         true -> {
-            CategoryWidget(dataBlock.data,dataBlock.header)
+            CategoryWidget(dataBlock.data,dataBlock.header,onItemClick)
         }
         false -> {
             BlankWidget()
@@ -53,7 +53,7 @@ fun CategorySection(dataBlock: Dashboard.Item) {
 @Keep
 @ExperimentalPagerApi
 @Composable
-fun CategoryWidget(first: List<Dashboard.Item.SubItem>,header: Dashboard.Item.Header?) {
+fun CategoryWidget(first: List<Dashboard.Item.SubItem>,header: Dashboard.Item.Header?,onItemClick: (String) -> Unit) {
     Box(
         modifier = Modifier
             .wrapContentWidth()
@@ -105,7 +105,7 @@ fun CategoryWidget(first: List<Dashboard.Item.SubItem>,header: Dashboard.Item.He
                                 .wrapContentWidth(),
                             contentAlignment = Alignment.Center
                         ) {
-                            CategoryItem(element, index)
+                            CategoryItem(element, index,onItemClick)
                         }
                     }
                 }
@@ -116,7 +116,7 @@ fun CategoryWidget(first: List<Dashboard.Item.SubItem>,header: Dashboard.Item.He
 
 @Keep
 @Composable
-fun CategoryItem(element: Dashboard.Item.SubItem, index: Int) {
+fun CategoryItem(element: Dashboard.Item.SubItem, index: Int,onItemClick: (String) -> Unit) {
     val screenWidth = LocalConfiguration.current.screenWidthDp / 3
     Box(
         modifier = Modifier
@@ -127,7 +127,10 @@ fun CategoryItem(element: Dashboard.Item.SubItem, index: Int) {
     ) {
         Column(
             Modifier
-                .wrapContentSize(),
+                .wrapContentSize()
+                .clickable {
+                    onItemClick(element.action.value ?: "")
+                },
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -138,12 +141,12 @@ fun CategoryItem(element: Dashboard.Item.SubItem, index: Int) {
                     .height(dimensionResource(id = R.dimen._90sdp))
                     .clickable(
                         onClick = {
-
+onItemClick(element.action.value?:"")
                         },
                     ), shape = RoundedCornerShape(dimensionResource(id = R.dimen._8sdp)),
                 elevation = dimensionResource(id = R.dimen._8sdp)
             ) {
-                Box {
+                Box(contentAlignment = Alignment.Center) {
                     val painter = if (element?.imageUrl == null) {
                         painterResource(R.drawable.ic_logo)
                     } else {
@@ -154,20 +157,21 @@ fun CategoryItem(element: Dashboard.Item.SubItem, index: Int) {
                                 .build()
                         )
                     }
-                    Image(
-                        painter = painterResource(R.drawable.ic_logo),
-                        contentDescription = "content",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
-                        contentScale = ContentScale.FillBounds
-                    )
+//                    Image(
+//                        painter = painterResource(R.drawable.ic_logo),
+//                        contentDescription = "content",
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .fillMaxHeight(),
+//                        contentScale = ContentScale.FillBounds
+//                    )
                     Image(
                         painter = painter,
+                        alignment = Alignment.Center,
                         contentDescription = "content",
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
+                            //.padding(dimensionResource(id = R.dimen._20sdp))
+                        , contentScale = ContentScale.Inside,
                     )
                 }
             }
@@ -180,9 +184,10 @@ fun CategoryItem(element: Dashboard.Item.SubItem, index: Int) {
             ) {
                 Text(
                     text = element?.title ?: "",
-                    color = colorResource(R.color.colorPrimaryDark),
+                    color = colorResource(R.color.colorPrimary),
                     fontSize = fontDimensionResource(id = R.dimen._11ssp),
                     textAlign = TextAlign.Center,
+                    fontStyle = FontStyle.Normal,
                     maxLines = 2, overflow = TextOverflow.Ellipsis,
                 )
             }

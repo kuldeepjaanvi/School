@@ -24,10 +24,10 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
 
 @Composable
-fun BannerSection(dataBlock: Dashboard.Item) {
+fun BannerSection(dataBlock: Dashboard.Item,onItemClick: (String) -> Unit) {
     when (!dataBlock.data.isNullOrEmpty()) {
         true -> {
-            Banner(dataBlock.data)
+            Banner(dataBlock.data,onItemClick)
         }
         false -> {
             BlankWidget()
@@ -37,7 +37,7 @@ fun BannerSection(dataBlock: Dashboard.Item) {
 
 
 @Composable
-fun Banner(first: List<Dashboard.Item.SubItem>) {
+fun Banner(first: List<Dashboard.Item.SubItem>,onItemClick: (String) -> Unit) {
     val context = LocalContext.current
     val height = dimensionResource(id = R.dimen._120sdp)
 
@@ -45,7 +45,7 @@ fun Banner(first: List<Dashboard.Item.SubItem>) {
         Box(modifier = Modifier
                 .clickable(
                     onClick = {
-
+onItemClick(first.first().action.value?:"")
                     },
                 )
                 .fillMaxWidth()
@@ -61,14 +61,14 @@ fun Banner(first: List<Dashboard.Item.SubItem>) {
                         .build()
                 )
             }
-            Image(
-                painter = painterResource(R.drawable.ic_logo),
-                contentDescription = "content",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimensionResource(id = R.dimen._110sdp)),
-                alignment = Alignment.Center,
-            )
+//            Image(
+//                painter = painterResource(R.drawable.ic_logo),
+//                contentDescription = "content",
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(dimensionResource(id = R.dimen._110sdp)),
+//                alignment = Alignment.Center,
+//            )
             Image(
                 painter = painter,
                 contentDescription = "content",
@@ -80,7 +80,7 @@ fun Banner(first: List<Dashboard.Item.SubItem>) {
         }
     }
     else{
-        BannerCarouselSection(first)
+        BannerCarouselSection(first,onItemClick)
     }
 }
 
@@ -88,11 +88,11 @@ fun Banner(first: List<Dashboard.Item.SubItem>) {
 
 
 @Composable
-fun BannerCarouselSection(first: List<Dashboard.Item.SubItem>
+fun BannerCarouselSection(first: List<Dashboard.Item.SubItem>,onItemClick: (String) -> Unit
 ) {
     when (!first.isNullOrEmpty()) {
         true -> {
-            BannerCarousel(first)
+            BannerCarousel(first,onItemClick)
         }
         false -> {
             BlankWidget()
@@ -103,7 +103,7 @@ fun BannerCarouselSection(first: List<Dashboard.Item.SubItem>
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun BannerCarousel(first: List<Dashboard.Item.SubItem>) {
+fun BannerCarousel(first: List<Dashboard.Item.SubItem>,onItemClick: (String) -> Unit) {
     val context = LocalContext.current
     val height = dimensionResource(id = R.dimen._120sdp)
     val pagerState = rememberPagerState()
@@ -125,7 +125,7 @@ fun BannerCarousel(first: List<Dashboard.Item.SubItem>) {
                 .fillMaxWidth()
                 .clickable(
                     onClick = {
-
+onItemClick(first[pagerState.currentPage].action.value?:"")
                     },
                 )
                 .height(height)
